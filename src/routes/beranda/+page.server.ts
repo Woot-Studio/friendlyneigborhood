@@ -4,12 +4,10 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user?.kelurahanId) redirect(303, '/wilayah');
-	const [event, days, news, path] = await Promise.all([
-		currentAlert(locals.user.kelurahanId),
-		ensureForecast(locals.user.kelurahanId),
-		announcementsFor(locals.user.kelurahanId, locals.user),
-		placePath(locals.user.kelurahanId)
-	]);
-	const checkin = event ? await myCheckin(event.id, locals.user.id) : null;
+	const event = currentAlert(locals.user.kelurahanId);
+	const days = await ensureForecast(locals.user.kelurahanId);
+	const news = announcementsFor(locals.user.kelurahanId, locals.user);
+	const checkin = event ? myCheckin(event.id, locals.user.id) : null;
+	const path = placePath(locals.user.kelurahanId);
 	return { event, days, news, checkin, path };
 };

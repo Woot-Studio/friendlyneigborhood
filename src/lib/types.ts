@@ -161,11 +161,6 @@ export interface Counts {
 	rentanBelum: number;
 }
 
-export interface RtBreakdown extends Counts {
-	rt: string;
-	rw: string;
-}
-
 export interface Aggregate {
 	is_simulation: boolean;
 	scenario: Scenario | 'tidak_ada';

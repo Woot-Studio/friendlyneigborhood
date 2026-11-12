@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AuthSplit from '#lib/components/AuthSplit.svelte';
 	import { ripple } from '#lib/ripple';
 	import type { PageProps } from './$types';
 
@@ -7,6 +8,7 @@
 
 <svelte:head><title>Masuk · Friendly Neighborhood</title></svelte:head>
 
+<AuthSplit>
 <main class="pad sheet stack" style="padding-top: 32px;">
 	<div>
 		<p class="kicker">Akun</p>
@@ -39,11 +41,6 @@
 			<input type="hidden" name="password" value="demo1234" />
 			<button class="btn outline" type="submit">Masuk sebagai Dina (ketua RT)</button>
 		</form>
-		<form method="POST">
-			<input type="hidden" name="phone" value="081300000001" />
-			<input type="hidden" name="password" value="demo1234" />
-			<input type="hidden" name="next" value="/kelurahan" />
-			<button class="btn outline" type="submit">Masuk ke Panel Kelurahan (Smart Gov)</button>
-		</form>
 	</section>
 </main>
+</AuthSplit>

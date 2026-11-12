@@ -30,7 +30,6 @@
 				<form method="POST" action="?/abaikan">
 					<button class="btn outline small" type="submit">Tandai tidak relevan</button>
 				</form>
-				<a class="btn outline small" href="/kelurahan">Panel Kelurahan</a>
 				<a class="btn primary small" href="/rt/ringkasan">Ringkasan</a>
 			</div>
 		{/if}
@@ -45,7 +44,6 @@
 		</section>
 		<div class="stack">
 			<a class="card" href="/rt/simulasi"><strong>Mulai simulasi siaga</strong><p class="muted">Notifikasi berlabel SIMULASI, bukan BMKG asli.</p></a>
-			<a class="card" href="/kelurahan"><strong>Panel Kelurahan &amp; Eskalasi SLA</strong><p class="muted">Rekap lintas-RT, pantauan batas respon 15 menit, dan ringkasan AI.</p></a>
 			<a class="card" href="/rt/posko"><strong>Konfirmasi calon posko</strong><p class="muted">Tempat ibadah yang belum dikonfirmasi.</p></a>
 			<a class="card" href="/rt/pengumuman"><strong>Kirim pengumuman</strong><p class="muted">Pesan ke warga kelurahan.</p></a>
 		</div>

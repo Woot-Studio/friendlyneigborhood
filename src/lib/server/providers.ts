@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto';
 import type { Facility, FacilityKind, ForecastDay, Wilayah } from '#lib/types';
-import { envVar } from './env';
 
 const BASE = 'https://use.apiindonesia.id';
 
@@ -29,11 +28,11 @@ interface ApiList<T> {
 }
 
 export function hasApiKey() {
-	return Boolean(envVar('API_INDONESIA_KEY'));
+	return Boolean(process.env.API_INDONESIA_KEY);
 }
 
 export async function apiGet<T>(path: string, query?: Record<string, string | number | undefined>): Promise<T> {
-	const key = envVar('API_INDONESIA_KEY');
+	const key = process.env.API_INDONESIA_KEY;
 	if (!key) throw new Error('API_INDONESIA_KEY belum diisi');
 	const url = new URL(path, BASE);
 	for (const [name, value] of Object.entries(query ?? {})) {

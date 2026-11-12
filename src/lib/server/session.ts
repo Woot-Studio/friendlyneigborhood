@@ -1,11 +1,10 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import type { Cookies } from '@sveltejs/kit';
-import { envVar } from './env';
 
 const COOKIE = 'fn_session';
 
 function secret() {
-	return envVar('SESSION_SECRET') || 'fn-dev-session-secret-change-me';
+	return process.env.SESSION_SECRET || 'fn-dev-session-secret-change-me';
 }
 
 export function signSession(id: string): string {
@@ -31,6 +30,7 @@ export function setSession(cookies: Cookies, id: string) {
 		path: '/',
 		httpOnly: true,
 		sameSite: 'lax',
+		secure: process.env.NODE_ENV === 'production',
 		maxAge: 60 * 60 * 24 * 60
 	});
 }

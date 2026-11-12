@@ -1,9 +1,11 @@
 <script lang="ts">
+	import AuthSplit from '#lib/components/AuthSplit.svelte';
 	import Logo from '#lib/components/Logo.svelte';
 </script>
 
 <svelte:head><title>Mulai · Friendly Neighborhood</title></svelte:head>
 
+<AuthSplit>
 <main class="pad sheet stack" style="padding-top: 28px;">
 	<span class="logo-mark" style="width:56px;height:56px;border-radius:16px;"><Logo size={56} /></span>
 	<div>
@@ -36,3 +38,4 @@
 	<a class="btn primary" href="/masuk">Masuk</a>
 	<a class="btn outline" href="/daftar">Daftar</a>
 </main>
+</AuthSplit>

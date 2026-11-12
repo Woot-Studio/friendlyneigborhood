@@ -8,7 +8,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!body.endpoint || !body.keys?.p256dh || !body.keys.auth) {
 		return json({ error: 'Langganan push tidak lengkap.' }, { status: 400 });
 	}
-	const result = await setPush(locals.user.id, {
+	const result = setPush(locals.user.id, {
 		endpoint: body.endpoint,
 		keys: { p256dh: body.keys.p256dh, auth: body.keys.auth }
 	});

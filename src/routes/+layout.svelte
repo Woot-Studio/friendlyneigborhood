@@ -16,6 +16,7 @@
 	const path = $derived(page.url.pathname);
 	const onboarding = $derived(!data.user || data.user.setupStep !== 'done');
 	const focused = $derived(path.startsWith('/siaga') || path.startsWith('/contoh'));
+	const narrowAuth = $derived(path === '/wilayah' || path === '/izin' || path === '/kerentanan');
 	let online = $state(true);
 
 	onMount(() => {
@@ -52,10 +53,14 @@
 			</section>
 		</div>
 	</div>
-{:else if onboarding || focused || !data.user}
+{:else if onboarding || !data.user}
 	{@render children()}
+{:else if data.user.role === 'warga' && !narrowAuth}
+	<ResidentShell user={data.user} {focused}>{@render children()}</ResidentShell>
 {:else if data.user.role === 'warga'}
-	<ResidentShell>{@render children()}</ResidentShell>
+	{@render children()}
+{:else if focused}
+	{@render children()}
 {:else}
 	<RtShell user={data.user}>{@render children()}</RtShell>
 {/if}

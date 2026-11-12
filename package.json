@@ -9,13 +9,8 @@
 	},
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && bun scripts/attach-cron.ts",
-		"preview": "bun run build && wrangler dev --port 43721",
-		"deploy": "bun run build && wrangler deploy",
-		"deploy:pages": "CF_PAGES=1 vite build && wrangler pages deploy .svelte-kit/cloudflare --project-name friendly-neighborhood",
-		"cf-typegen": "wrangler types",
-		"d1:migrate:local": "wrangler d1 migrations apply DB --local",
-		"d1:migrate:remote": "wrangler d1 migrations apply DB --remote",
+		"build": "vite build",
+		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -25,7 +20,7 @@
 		"poll": "bun scripts/poll.ts"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-cloudflare": "^8.0.2",
+		"@sveltejs/adapter-vercel": "^7.0.0",
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@types/leaflet": "^1.9.22",
@@ -35,8 +30,7 @@
 		"svelte": "^5.57.2",
 		"svelte-check": "^4.6.0",
 		"typescript": "^6.0.3",
-		"vite": "^8.3.0",
-		"wrangler": "^4.160.1"
+		"vite": "^8.3.0"
 	},
 	"dependencies": {
 		"@fontsource/plus-jakarta-sans": "^5.3.0",

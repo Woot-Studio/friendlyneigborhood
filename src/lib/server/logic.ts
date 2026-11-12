@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { normalizePhone, scenarioLabel, SLA_MINUTES } from '../domain';
+import { normalizePhone, scenarioLabel } from '../domain';
 import type {
 	AlertEvent,
 	Announcement,
@@ -281,20 +281,6 @@ export function markIrrelevant(state: AppState, actorId: string, eventId: string
 	if (!event.relevant || event.endedAt) return fail('Kejadian ini sudah ditutup.');
 	event.relevant = false;
 	event.endedAt = new Date().toISOString();
-	return { ok: true, data: event };
-}
-
-// ponytail: backdating startedAt triggers SLA threshold everywhere with zero schema changes; add dedicated escalated_at column if separate audit timestamps are needed
-export function breachSla(state: AppState, actorId: string, eventId: string): Result<AlertEvent> {
-	const event = state.events.find((item) => item.id === eventId);
-	if (!event) return fail('Kejadian tidak ditemukan.');
-	const staff = ensureStaff(state, actorId, event.kelurahanId);
-	if (!staff.ok) return staff;
-	if (!event.relevant || event.endedAt) return fail('Kejadian ini sudah ditutup.');
-	const targetMs = Date.now() - (SLA_MINUTES + 1) * 60000;
-	if (new Date(event.startedAt).getTime() > targetMs) {
-		event.startedAt = new Date(targetMs).toISOString();
-	}
 	return { ok: true, data: event };
 }
 

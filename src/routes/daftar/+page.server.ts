@@ -10,7 +10,7 @@ export const actions: Actions = {
 		const role = String(form.get('role') ?? 'warga') as Role;
 		const fullName = String(form.get('fullName') ?? '');
 		const phone = String(form.get('phone') ?? '');
-		const result = await register({
+		const result = register({
 			fullName,
 			phone,
 			password: String(form.get('password') ?? ''),

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { wilayahTitle } from '#lib/domain';
 	import { ripple } from '#lib/ripple';
+	import AuthSplit from '#lib/components/AuthSplit.svelte';
 	import { ChevronLeft, MapPin, Search } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 
@@ -41,6 +42,7 @@
 
 <svelte:head><title>Pilih kelurahan · Friendly Neighborhood</title></svelte:head>
 
+<AuthSplit>
 <main class="pad sheet stack" style="padding-top: 12px;">
 	<a class="back" href={data.user?.setupStep === 'done' ? '/profil' : '/daftar'}><ChevronLeft size={20} /> Pilih kelurahan</a>
 	<p class="lead">Pilih wilayah bertahap sampai tingkat kelurahan.</p>
@@ -94,3 +96,4 @@
 		<button class="btn primary" type="button" disabled>Lanjut</button>
 	{/if}
 </main>
+</AuthSplit>

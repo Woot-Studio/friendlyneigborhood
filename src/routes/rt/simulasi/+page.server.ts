@@ -11,7 +11,7 @@ export const actions: Actions = {
 		if (scenario !== 'hujan_lebat' && scenario !== 'gempa_dirasakan') {
 			return fail(400, { message: 'Pilih satu skenario.' });
 		}
-		const result = await beginSimulation(locals.user.id, scenario);
+		const result = beginSimulation(locals.user.id, scenario);
 		if (!result.ok) return fail(400, { message: result.error });
 		await notifyKelurahan(result.data.kelurahanId, {
 			title: `SIMULASI · ${result.data.title}`,

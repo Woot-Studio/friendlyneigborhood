@@ -210,7 +210,6 @@ export function seedState(): AppState {
 			fullName: 'Nur Aisyah',
 			phone: '081211110002',
 			role: 'warga',
-			rt: '03',
 			address: 'Jl. Contoh Prof. Tabrani No. 5',
 			lat: -6.1695,
 			lng: 106.7955,
@@ -221,7 +220,6 @@ export function seedState(): AppState {
 			fullName: 'Joko Susilo',
 			phone: '081211110003',
 			role: 'warga',
-			rt: '01',
 			address: 'Jl. Contoh Kemanggisan No. 3',
 			lat: -6.1668,
 			lng: 106.7948,
@@ -232,7 +230,6 @@ export function seedState(): AppState {
 			fullName: 'Agus Pratama',
 			phone: '081211110004',
 			role: 'warga',
-			rt: '03',
 			address: 'Jl. Contoh Jend. S. Parman No. 20',
 			lat: -6.171,
 			lng: 106.801
@@ -242,7 +239,6 @@ export function seedState(): AppState {
 			fullName: 'Rina Kusuma',
 			phone: '081211110005',
 			role: 'warga',
-			rt: '03',
 			address: 'Jl. Contoh Relasi No. 9',
 			lat: -6.168,
 			lng: 106.7935
@@ -261,7 +257,6 @@ export function seedState(): AppState {
 			fullName: 'Maya Anggraini',
 			phone: '081211110007',
 			role: 'warga',
-			rt: '01',
 			address: 'Jl. Contoh Tanjung Duren No. 4',
 			lat: -6.1658,
 			lng: 106.8002

@@ -8,7 +8,7 @@ export const actions: Actions = {
 		if (!locals.user) redirect(303, '/masuk');
 		const form = await request.formData();
 		if (form.get('yakin') !== 'ya') return fail(400, { message: 'Centang konfirmasi untuk menghapus data.' });
-		const result = await removeAccount(locals.user.id);
+		const result = removeAccount(locals.user.id);
 		if (!result.ok) return fail(400, { message: result.error });
 		clearSession(cookies);
 		redirect(303, '/');

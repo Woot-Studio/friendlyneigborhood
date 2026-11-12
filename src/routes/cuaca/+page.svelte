@@ -11,6 +11,7 @@
 <div class="sheet stack">
 	<a class="back" href="/beranda"><ChevronLeft size={20} /> Cuaca dan peringatan</a>
 	{#if kel}<p class="chip rose">Kel. {kel.altName}</p>{/if}
+	<div class="cuaca-grid">
 	<section class="card stack-s">
 		<p class="kicker">Prakiraan tiga hari</p>
 		<p class="muted">Sumber: BMKG melalui API Indonesia. Prakiraan tersedia sampai tingkat kelurahan.</p>
@@ -42,6 +43,7 @@
 			<p class="muted">Peringatan dini cuaca BMKG bersifat tingkat provinsi, bukan kelurahan. Jika ada, akan muncul di sini dan memicu siaga.</p>
 		{/if}
 	</section>
+	</div>
 	{#if data.contoh}
 		<p class="note"><span class="dot"></span> Lokasi dan prakiraan di layar ini adalah contoh, bukan data live.</p>
 	{/if}

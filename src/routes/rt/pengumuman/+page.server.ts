@@ -3,12 +3,12 @@ import { notifyKelurahan } from '#lib/server/push';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, url }) => {
+export const load: PageServerLoad = ({ locals, url }) => {
 	if (!locals.user || locals.user.role === 'warga') redirect(303, '/beranda');
 	if (!locals.user.kelurahanId) redirect(303, '/wilayah');
 	const draf = url.searchParams.get('draf');
 	return {
-		items: await announcementsFor(locals.user.kelurahanId, locals.user),
+		items: announcementsFor(locals.user.kelurahanId, locals.user),
 		draft:
 			draf === 'posko'
 				? 'Posko sementara sudah dibuka di Masjid Contoh Al-Hidayah. Bawa obat pribadi dan dokumen penting.'
@@ -21,7 +21,7 @@ export const actions: Actions = {
 		if (!locals.user) redirect(303, '/masuk');
 		const form = await request.formData();
 		const audience = String(form.get('audience') ?? 'semua') === 'rentan' ? 'rentan' : 'semua';
-		const result = await publishAnnouncement(locals.user.id, {
+		const result = publishAnnouncement(locals.user.id, {
 			body: String(form.get('body') ?? ''),
 			audience
 		});

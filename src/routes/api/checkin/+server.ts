@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	if (status !== 'aman' && status !== 'butuh') return json({ error: 'Status tidak dikenal.' }, { status: 400 });
 	const latRaw = String(form.get('lat') ?? '');
 	const lngRaw = String(form.get('lng') ?? '');
-	const result = await sendStatus({
+	const result = sendStatus({
 		userId: locals.user.id,
 		eventId: String(form.get('eventId') ?? ''),
 		status,

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ripple } from '#lib/ripple';
+	import AuthSplit from '#lib/components/AuthSplit.svelte';
 	import { Accessibility, Baby, ChevronLeft, UserRound } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 
@@ -14,6 +15,7 @@
 
 <svelte:head><title>Tandai kerentanan · Friendly Neighborhood</title></svelte:head>
 
+<AuthSplit>
 <main class="pad sheet stack" style="padding-top: 12px;">
 	<a class="back" href="/wilayah"><ChevronLeft size={20} /> Tandai kerentanan</a>
 	<p class="lead">Langkah ini opsional. Data membantu ketua RT dan relawan memprioritaskan pengecekan jika Anda belum merespons.</p>
@@ -50,6 +52,7 @@
 		<button class="btn ghost" type="submit">Lewati dulu</button>
 	</form>
 </main>
+</AuthSplit>
 
 <style>
 	label.choice input { position: absolute; opacity: 0; pointer-events: none; }

@@ -3,7 +3,6 @@
 	import { roleLabel, initials } from '#lib/domain';
 	import type { PublicUser } from '#lib/types';
 	import {
-		Building2,
 		House,
 		MapPin,
 		Megaphone,
@@ -20,8 +19,7 @@
 	const contoh = $derived(Boolean(page.data.contoh));
 
 	const links = [
-		{ href: '/rt', label: 'Dasbor RT', icon: House },
-		{ href: '/kelurahan', label: 'Panel Kelurahan', icon: Building2 },
+		{ href: '/rt', label: 'Dasbor', icon: House },
 		{ href: '/fasilitas', label: 'Fasilitas', icon: MapPin },
 		{ href: '/riwayat', label: 'Riwayat', icon: ScrollText },
 		{ href: '/profil', label: 'Profil', icon: UserRound },
@@ -64,8 +62,7 @@
 		{@render children()}
 	</div>
 	<nav class="tabbar" aria-label="Navigasi ketua RT">
-		<a href="/rt" class:on={path === '/rt' || path.startsWith('/rt/warga')}><House size={20} />RT</a>
-		<a href="/kelurahan" class:on={path.startsWith('/kelurahan')}><Building2 size={20} />Kelurahan</a>
+		<a href="/rt" class:on={path === '/rt' || path.startsWith('/rt/warga')}><House size={20} />Dasbor</a>
 		<a href="/fasilitas" class:on={path.startsWith('/fasilitas')}><MapPin size={20} />Fasilitas</a>
 		<a href="/riwayat" class:on={path.startsWith('/riwayat')}><ScrollText size={20} />Riwayat</a>
 		<a href="/profil" class:on={path.startsWith('/profil')}><UserRound size={20} />Profil</a>
