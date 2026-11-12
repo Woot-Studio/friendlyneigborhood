@@ -3,16 +3,16 @@ import { clearSession } from '#lib/server/session';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = ({ locals }) => {
+export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) redirect(303, '/masuk');
-	return { path: locals.user.kelurahanId ? placePath(locals.user.kelurahanId) : [] };
+	return { path: locals.user.kelurahanId ? await placePath(locals.user.kelurahanId) : [] };
 };
 
 export const actions: Actions = {
 	simpan: async ({ request, locals }) => {
 		if (!locals.user) redirect(303, '/masuk');
 		const form = await request.formData();
-		const result = setProfile(locals.user.id, {
+		const result = await setProfile(locals.user.id, {
 			rt: String(form.get('rt') ?? ''),
 			rw: String(form.get('rw') ?? ''),
 			address: String(form.get('address') ?? ''),

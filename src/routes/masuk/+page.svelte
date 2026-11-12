@@ -39,5 +39,11 @@
 			<input type="hidden" name="password" value="demo1234" />
 			<button class="btn outline" type="submit">Masuk sebagai Dina (ketua RT)</button>
 		</form>
+		<form method="POST">
+			<input type="hidden" name="phone" value="081300000001" />
+			<input type="hidden" name="password" value="demo1234" />
+			<input type="hidden" name="next" value="/kelurahan" />
+			<button class="btn outline" type="submit">Masuk ke Panel Kelurahan (Smart Gov)</button>
+		</form>
 	</section>
 </main>

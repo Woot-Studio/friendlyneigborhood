@@ -1,10 +1,11 @@
+import { envVar } from '#lib/server/env';
 import { pollWarnings } from '#lib/server/poll';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 function allowed(request: Request) {
-	const secret = process.env.CRON_SECRET;
-	if (!secret) return process.env.NODE_ENV !== 'production';
+	const secret = envVar('CRON_SECRET');
+	if (!secret) return request.headers.get('x-internal-cron') === '1' || envVar('NODE_ENV') !== 'production';
 	return request.headers.get('authorization') === `Bearer ${secret}`;
 }
 

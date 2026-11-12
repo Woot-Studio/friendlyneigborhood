@@ -3,7 +3,7 @@ import { fetchAutogempa, fetchWarnings, hasApiKey } from './providers';
 import { kelurahanWithResidents, openExternal } from './db';
 
 export async function pollWarnings() {
-	const places = kelurahanWithResidents();
+	const places = await kelurahanWithResidents();
 	const created: string[] = [];
 	const errors: string[] = [];
 
@@ -25,7 +25,7 @@ export async function pollWarnings() {
 						continue;
 					}
 					for (const place of group) {
-						const event = openExternal({
+						const event = await openExternal({
 							kelurahanId: place.id,
 							externalId: warning.id,
 							kind: 'cuaca',
@@ -60,7 +60,7 @@ export async function pollWarnings() {
 				const names = place.path.map((item) => item.altName.toLowerCase()).filter((name) => name.length > 3);
 				const relevant = names.some((name) => blob.includes(name));
 				if (!relevant) continue;
-				const event = openExternal({
+				const event = await openExternal({
 					kelurahanId: place.id,
 					externalId: gempa.DateTime,
 					kind: 'gempa',
@@ -69,7 +69,7 @@ export async function pollWarnings() {
 					headline: `Gempa M${gempa.Magnitude}. ${gempa.Wilayah}`,
 					areaLabel: gempa.Wilayah,
 					coverageNote: gempa.Potensi || 'Data gempa BMKG',
-					sourceLabel: 'BMKG',
+					sourceLabel: 'BMKG'
 				});
 				if (event) {
 					created.push(event.id);

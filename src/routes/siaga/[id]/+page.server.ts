@@ -3,19 +3,22 @@ import { currentAlert, fullUser, getEvent, myCheckin, placePath } from '#lib/ser
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = ({ locals, params }) => {
+export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!locals.user) redirect(303, '/masuk');
-	const event = getEvent(params.id);
+	const event = await getEvent(params.id);
 	if (!event || event.kelurahanId !== locals.user.kelurahanId) error(404, 'Siaga tidak ditemukan.');
-	const checkin = myCheckin(event.id, locals.user.id);
-	const claimer = checkin?.claimedBy ? fullUser(checkin.claimedBy) : null;
-	const active = currentAlert(locals.user.kelurahanId);
+	const [checkin, active, path] = await Promise.all([
+		myCheckin(event.id, locals.user.id),
+		currentAlert(locals.user.kelurahanId),
+		placePath(event.kelurahanId)
+	]);
+	const claimer = checkin?.claimedBy ? await fullUser(checkin.claimedBy) : null;
 	return {
 		event,
 		checkin,
 		claimerName: claimer ? shortName(claimer.fullName) : null,
 		closed: Boolean(event.endedAt || !event.relevant),
-		path: placePath(event.kelurahanId),
+		path,
 		stillActive: active?.id === event.id
 	};
 };

@@ -358,11 +358,27 @@ img { max-width: 100%; }
 	bottom: 0;
 	width: min(480px, 100%);
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
 	background: white;
 	border-top: 1px solid var(--line);
 	padding: 4px 4px calc(6px + env(safe-area-inset-bottom));
 }
+
+.sla-alert {
+	background: var(--rose-tint);
+	border-color: var(--rose);
+	color: var(--ink);
+}
+.sla-alert strong {
+	font-size: 12px;
+	letter-spacing: 0.05em;
+	color: var(--rose);
+}
+.table-wrap { overflow-x: auto; }
+.rt-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.rt-table th, .rt-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.rt-table th { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.rt-table tbody tr:last-child td { border-bottom: none; }
 .tabbar a {
 	min-height: 52px;
 	display: flex;

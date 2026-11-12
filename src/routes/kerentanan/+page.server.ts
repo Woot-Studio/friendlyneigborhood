@@ -6,7 +6,7 @@ export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		if (!locals.user) redirect(303, '/masuk');
 		const form = await request.formData();
-		const result = setVulnerability(
+		const result = await setVulnerability(
 			locals.user.id,
 			{
 				lansia: form.get('lansia') === 'ya',
@@ -17,7 +17,7 @@ export const actions: Actions = {
 			form.get('lewati') === 'ya'
 		);
 		if (!result.ok) return fail(400, { message: result.error });
-		const user = getUser(locals.user.id);
+		const user = await getUser(locals.user.id);
 		redirect(303, user?.setupStep === 'done' ? '/profil' : '/izin');
 	}
 };

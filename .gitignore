@@ -12,11 +12,14 @@ node_modules
 .DS_Store
 Thumbs.db
 
-# Env
+# Env & Cloudflare local secrets
 .env
 .env.*
 !.env.example
 !.env.test
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 
 # Demo state
 /data

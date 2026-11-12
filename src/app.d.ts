@@ -1,3 +1,4 @@
+/// <reference path="../worker-configuration.d.ts" />
 /// <reference types="node" />
 import type { PublicUser } from '#lib/types';
 

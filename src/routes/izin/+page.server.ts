@@ -6,7 +6,7 @@ export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		if (!locals.user) redirect(303, '/masuk');
 		const form = await request.formData();
-		setPrefs(locals.user.id, {
+		await setPrefs(locals.user.id, {
 			notifyEnabled: form.get('notify') === 'ya',
 			locationOnConfirm: form.get('lokasi') === 'ya'
 		});
