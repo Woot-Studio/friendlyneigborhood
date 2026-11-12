@@ -211,7 +211,7 @@ Versi lengkap setiap dependensi tercantum di `package.json` dan `bun.lock`.
 
 ## Tim Developer
 
-Tim **CaseyInfokanNamaTIm**, Program Studi Sistem Informasi, Universitas Tarumanagara:
+Tim **CaseyInfokanNamaTIm**, Program Studi Sistem Informasi dan Teknik Informatika, Universitas Tarumanagara, Universitas President, Universitas Klabat:
 
 - Casey Heraldo Isaac Pinontoan
 - Matthew Eauggelion Pangemanan
