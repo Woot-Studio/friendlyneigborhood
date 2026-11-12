@@ -1,5 +1,4 @@
 <script lang="ts">
-	import AuthSplit from '#lib/components/AuthSplit.svelte';
 	import { ripple } from '#lib/ripple';
 	import { HandHelping, House, Shield } from '@lucide/svelte';
 	import type { PageProps } from './$types';
@@ -10,7 +9,6 @@
 
 <svelte:head><title>Daftar · Friendly Neighborhood</title></svelte:head>
 
-<AuthSplit>
 <main class="pad sheet stack" style="padding-top: 28px;">
 	<div>
 		<p class="kicker">Akun baru</p>
@@ -66,7 +64,6 @@
 	</form>
 	<p class="muted">Sudah punya akun? <a href="/masuk">Masuk</a></p>
 </main>
-</AuthSplit>
 
 <style>
 	label.choice input { position: absolute; opacity: 0; }

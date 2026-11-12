@@ -1,25 +1,26 @@
 /**
- * Impor wilayah Kemendagri sekali ke Postgres.
+ * Impor wilayah Kemendagri sekali ke Cloudflare D1 (default) atau Supabase Postgres.
  * Tanpa API_INDONESIA_KEY, skrip berhenti: fixture Kel. Tomang sudah ada di aplikasi.
- * Endpoint yang dipakai (bukan tebakan):
+ * Endpoint resmi yang dipakai:
  *   GET /api/v1/wilayah/provinsi
  *   GET /api/v1/wilayah/kabupaten
  *   GET /api/v1/wilayah/kecamatan
  *   GET /api/v1/wilayah/kelurahan
  */
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { createClient } from '@supabase/supabase-js';
 
 const key = process.env.API_INDONESIA_KEY;
 const url = process.env.PUBLIC_SUPABASE_URL;
 const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const remoteFlag = process.argv.includes('--remote') ? '--remote' : '--local';
 
 if (!key) {
 	console.log('API_INDONESIA_KEY kosong. Impor dilewati. Aplikasi memakai fixture wilayah.');
 	process.exit(0);
-}
-if (!url || !service) {
-	console.error('Isi PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY sebelum impor.');
-	process.exit(1);
 }
 
 const BASE = 'https://use.apiindonesia.id';
@@ -59,6 +60,12 @@ async function page(path: string, query: Record<string, string> = {}) {
 
 function idOf(row: Row) {
 	return String(row.code || row.id || '');
+}
+
+function sqlLit(val: string | number | null): string {
+	if (val === null || val === undefined) return 'NULL';
+	if (typeof val === 'number') return Number.isFinite(val) ? String(val) : 'NULL';
+	return `'${String(val).replaceAll("'", "''")}'`;
 }
 
 const provinsi = await page('/api/v1/wilayah/provinsi');
@@ -105,13 +112,41 @@ const records = [
 	}))
 ].filter((row) => row.id);
 
-const admin = createClient(url, service, { auth: { persistSession: false } });
-const chunk = 500;
-for (let index = 0; index < records.length; index += chunk) {
-	const slice = records.slice(index, index + chunk);
-	const { error } = await admin.from('wilayah').upsert(slice);
-	if (error) throw error;
-	console.log(`Tersimpan ${Math.min(index + chunk, records.length)} / ${records.length}`);
+if (url && service) {
+	const admin = createClient(url, service, { auth: { persistSession: false } });
+	const chunk = 500;
+	for (let index = 0; index < records.length; index += chunk) {
+		const slice = records.slice(index, index + chunk);
+		const { error } = await admin.from('wilayah').upsert(slice);
+		if (error) throw error;
+		console.log(`Tersimpan di Supabase ${Math.min(index + chunk, records.length)} / ${records.length}`);
+	}
+} else {
+	const dir = mkdtempSync(join(tmpdir(), 'fn-wilayah-'));
+	try {
+		const chunk = 1000;
+		for (let index = 0; index < records.length; index += chunk) {
+			const slice = records.slice(index, index + chunk);
+			const values = slice
+				.map(
+					(r) =>
+						`(${sqlLit(r.id)}, ${sqlLit(r.parent_id)}, ${sqlLit(r.level)}, ${sqlLit(r.name)}, ${sqlLit(r.alt_name)}, ${sqlLit(r.lat)}, ${sqlLit(r.lng)})`
+				)
+				.join(',\n');
+			const sqlFile = join(dir, `batch_${index}.sql`);
+			writeFileSync(
+				sqlFile,
+				`INSERT OR REPLACE INTO wilayah (id, parent_id, level, name, alt_name, lat, lng) VALUES\n${values};\n`
+			);
+			const res = spawnSync('bunx', ['wrangler', 'd1', 'execute', 'DB', remoteFlag, '--file', sqlFile], {
+				stdio: 'inherit'
+			});
+			if (res.status !== 0) throw new Error(`Gagal impor D1 pada batch ${index}`);
+			console.log(`Tersimpan di D1 (${remoteFlag}) ${Math.min(index + chunk, records.length)} / ${records.length}`);
+		}
+	} finally {
+		rmSync(dir, { recursive: true, force: true });
+	}
 }
 
 const requests = Math.ceil(38 / 100) + Math.ceil(514 / 100) + Math.ceil(7285 / 100) + Math.ceil(83762 / 100);

@@ -23,8 +23,6 @@
 		<h1>Fasilitas terdekat</h1>
 		<p class="lead">Calon posko memakai rumah ibadah, dan baru resmi setelah dikonfirmasi petugas.</p>
 	</div>
-	<div class="facility-split">
-	<div class="facility-map">
 	<MapView
 		label={data.contoh ? 'Contoh peta fasilitas' : 'Peta fasilitas'}
 		center={data.center}
@@ -36,8 +34,7 @@
 			label: item.name
 		}))}
 	/>
-	</div>
-	<div class="stack-s stagger facility-list">
+	<div class="stack-s stagger">
 		{#each data.items as item (item.id)}
 			{@const Icon = iconFor(item.kind)}
 			<a class="card card-link" href="https://www.openstreetmap.org/?mlat={item.lat}&mlon={item.lng}#map=17/{item.lat}/{item.lng}" target="_blank" rel="noreferrer">
@@ -53,7 +50,6 @@
 		{:else}
 			<p class="card">Belum ada fasilitas tersimpan untuk kelurahan ini.</p>
 		{/each}
-	</div>
 	</div>
 	<p class="note"><span class="dot"></span> Berdasarkan data yang tersedia.{#if data.fromApi} © OpenStreetMap contributors.{/if}</p>
 </div>

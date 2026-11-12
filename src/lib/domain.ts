@@ -9,10 +9,13 @@ import type {
 	HelpType,
 	PublicUser,
 	ResidentRow,
+	RtBreakdown,
 	Scenario,
 	Vulnerability,
 	Wilayah
 } from './types';
+
+export const SLA_MINUTES = 15;
 
 export const AGGREGATE_KEYS = [
 	'is_simulation',
@@ -315,4 +318,45 @@ export function phaseLabel(phase: ReturnType<typeof eventPhase>): string {
 	if (phase === 'berjalan') return 'Sedang berjalan';
 	if (phase === 'tidak_relevan') return 'Tidak relevan';
 	return 'Selesai';
+}
+
+export function elapsedMinutes(startedAt: string, nowMs = Date.now()): number {
+	return Math.max(0, Math.floor((nowMs - new Date(startedAt).getTime()) / 60000));
+}
+
+export function slaState(event: AlertEvent | null, rows: ResidentRow[], nowMs = Date.now()) {
+	const active = Boolean(event && event.relevant && !event.endedAt);
+	const elapsedMin = active && event ? elapsedMinutes(event.startedAt, nowMs) : 0;
+	const remainingMin = Math.max(0, SLA_MINUTES - elapsedMin);
+	const breached = active && elapsedMin >= SLA_MINUTES;
+	// Kandidat eskalasi: warga butuh bantuan atau warga rentan belum merespons yang belum diklaim ('dicek') relawan RT
+	const pendingCritical = rows.filter(
+		(row) => row.status === 'butuh' || (row.status === 'belum' && row.vulnerable)
+	);
+	return {
+		active,
+		elapsedMin,
+		remainingMin,
+		breached,
+		pendingCritical,
+		escalated: breached ? pendingCritical : []
+	};
+}
+
+export function groupByRt(rows: ResidentRow[]): RtBreakdown[] {
+	const buckets = new Map<string, ResidentRow[]>();
+	for (const row of rows) {
+		const rt = row.rt || '00';
+		const rw = row.rw || '00';
+		const key = `${rt}:${rw}`;
+		const list = buckets.get(key) ?? [];
+		list.push(row);
+		buckets.set(key, list);
+	}
+	return [...buckets.entries()]
+		.map(([key, items]) => {
+			const [rt, rw] = key.split(':');
+			return { rt, rw, ...countRows(items) };
+		})
+		.sort((a, b) => b.rentanBelum + b.butuh - (a.rentanBelum + a.butuh) || a.rt.localeCompare(b.rt, 'id'));
 }

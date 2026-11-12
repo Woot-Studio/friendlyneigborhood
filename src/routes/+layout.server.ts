@@ -1,10 +1,11 @@
 import { placeLabel } from '#lib/server/db';
+import { envVar } from '#lib/server/env';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
 const OPEN = new Set(['/', '/mulai', '/masuk', '/daftar']);
 
-export const load: LayoutServerLoad = ({ locals, url }) => {
+export const load: LayoutServerLoad = async ({ locals, url }) => {
 	const user = locals.user;
 	const path = url.pathname;
 	if (!user && !OPEN.has(path)) redirect(303, '/masuk');
@@ -18,8 +19,8 @@ export const load: LayoutServerLoad = ({ locals, url }) => {
 	}
 	return {
 		user,
-		kelurahanLabel: user?.kelurahanId ? placeLabel(user.kelurahanId) : '',
-		contoh: !process.env.API_INDONESIA_KEY,
-		vapidPublicKey: process.env.PUBLIC_VAPID_KEY ?? ''
+		kelurahanLabel: user?.kelurahanId ? await placeLabel(user.kelurahanId) : '',
+		contoh: !envVar('API_INDONESIA_KEY'),
+		vapidPublicKey: envVar('PUBLIC_VAPID_KEY') ?? ''
 	};
 };

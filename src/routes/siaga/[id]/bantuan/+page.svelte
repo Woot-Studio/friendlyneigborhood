@@ -51,8 +51,7 @@
 
 <svelte:head><title>Butuh bantuan · Friendly Neighborhood</title></svelte:head>
 
-<main class="pad sheet stack nest-pad">
-	<div class="form-frame">
+<main class="pad sheet stack" style="padding-top: 8px;">
 	<a class="back" href="/siaga/{data.event.id}"><ChevronLeft size={20} /> Butuh bantuan</a>
 	<div>
 		<h1>Butuh bantuan</h1>
@@ -73,5 +72,4 @@
 	</label>
 	<p class="muted">Lokasi akan dikirim. {data.user?.address ? `Titik terdaftar: ${data.user.address}, ${data.kelurahanLabel}.` : 'Izinkan GPS bila diminta browser.'}</p>
 	<button class="btn urgent" use:ripple type="button" disabled={sending} onclick={kirim}>{sending ? 'Mengirim…' : 'Kirim permintaan bantuan'}</button>
-	</div>
 </main>

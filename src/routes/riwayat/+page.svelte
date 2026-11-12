@@ -19,7 +19,7 @@
 			<p class="muted">Siaga dan simulasi di kelurahan ini akan muncul di sini setelah berlangsung.</p>
 		</article>
 	{:else}
-		<div class="stack-s stagger event-grid">
+		<div class="stack-s stagger">
 			{#each data.events as event (event.id)}
 				<a class="card" href="/riwayat/{event.id}" style="display:block; color:inherit;">
 					<div class="between">

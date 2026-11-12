@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { formatWib, helpLabel, statusLabel } from '#lib/domain';
 	import { ripple } from '#lib/ripple';
-	import MapView from '#lib/components/MapView.svelte';
 	import { ChevronLeft, CircleCheck, HandHelping, MapPin } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 
@@ -47,8 +46,8 @@
 
 <svelte:head><title>{data.event.isSimulation ? 'Siaga aktif · simulasi' : 'Siaga aktif'}</title></svelte:head>
 
-<main class="pad sheet nest-pad siaga-page">
-	<header class="alert-bar">
+<main class="pad sheet" style="padding-top: 8px;">
+	<header class="urgent">
 		<div class="between">
 			<a class="back" href="/beranda"><ChevronLeft size={20} /> {data.event.isSimulation ? 'Siaga aktif · simulasi' : 'Siaga aktif'}</a>
 			{#if data.event.isSimulation}<span class="chip gold">SIMULASI</span>{/if}
@@ -62,8 +61,6 @@
 		</dl>
 	</header>
 
-	<div class="siaga-grid">
-	<div class="siaga-main siaga-body">
 	{#if data.closed}
 		<section class="stack">
 			<h1>Siaga ini sudah ditutup</h1>
@@ -71,7 +68,7 @@
 			<a class="btn primary" href="/riwayat/{data.event.id}">Lihat rekap</a>
 		</section>
 	{:else if done && data.checkin}
-		<section class="stack" style="text-align: center;">
+		<section class="stack" style="text-align:center;">
 			<div class="check-pop pop" class:butuh={data.checkin.status === 'butuh'}><CircleCheck size={36} /></div>
 			<h1>{data.checkin.status === 'butuh' ? 'Permintaan bantuan terkirim' : 'Status Anda sudah tercatat'}</h1>
 			<p class="lead">
@@ -91,29 +88,25 @@
 			<span class="chip dicek">Sedang dicek oleh {data.claimerName ?? 'relawan'}</span>
 			<h1>Rumah Anda sedang dicek</h1>
 			<p class="lead">Relawan kelurahan sudah menuju lokasi. Anda tetap bisa memperbarui kondisi.</p>
-			<div class="action-row">
-				<button class="btn green" use:ripple type="button" disabled={sending} onclick={sayaAman}>
-					<span class="icon-bubble"><CircleCheck size={18} /></span>
-					Saya aman
-				</button>
-				<a class="btn urgent" href="/siaga/{data.event.id}/bantuan"><span class="icon-bubble"><HandHelping size={18} /></span> Butuh bantuan</a>
-			</div>
+			<button class="btn green" use:ripple type="button" disabled={sending} onclick={sayaAman}>
+				<span class="icon-bubble"><CircleCheck size={18} /></span>
+				Saya aman
+			</button>
+			<a class="btn urgent" href="/siaga/{data.event.id}/bantuan"><span class="icon-bubble"><HandHelping size={18} /></span> Butuh bantuan</a>
 		</section>
 	{:else}
 		<section class="stack">
 			<h1>Bagaimana kondisi Anda sekarang?</h1>
 			<p class="lead">Tekan salah satu tombol. Lokasi GPS akan dikirim ke ketua RT dan relawan di kelurahan Anda.</p>
 			{#if problem}<p class="error">{problem}</p>{/if}
-			<div class="action-row">
-				<button class="btn green" use:ripple type="button" disabled={sending} onclick={sayaAman}>
-					<span class="icon-bubble"><CircleCheck size={18} /></span>
-					{sending ? 'Mengirim lokasi…' : 'Saya aman'}
-				</button>
-				<a class="btn urgent" href="/siaga/{data.event.id}/bantuan">
-					<span class="icon-bubble"><HandHelping size={18} /></span>
-					Butuh bantuan
-				</a>
-			</div>
+			<button class="btn green" use:ripple type="button" disabled={sending} onclick={sayaAman}>
+				<span class="icon-bubble"><CircleCheck size={18} /></span>
+				{sending ? 'Mengirim lokasi…' : 'Saya aman'}
+			</button>
+			<a class="btn urgent" href="/siaga/{data.event.id}/bantuan">
+				<span class="icon-bubble"><HandHelping size={18} /></span>
+				Butuh bantuan
+			</a>
 			<a class="btn ghost" href="/fasilitas"><MapPin size={18} /> Lihat fasilitas terdekat</a>
 			{#if data.event.isSimulation}
 				<p class="note"><span class="dot"></span> Ini simulasi. Tidak ada peringatan BMKG yang sedang berlaku.</p>
@@ -122,30 +115,4 @@
 			{/if}
 		</section>
 	{/if}
-	</div>
-	<aside class="siaga-aside">
-		<MapView
-			label={data.contoh ? 'Contoh peta fasilitas' : 'Fasilitas terdekat'}
-			center={data.center}
-			points={data.nearby.map((item) => ({
-				id: item.id,
-				lat: item.lat,
-				lng: item.lng,
-				status: item.confirmed ? 'aman' : 'belum',
-				label: item.name
-			}))}
-		/>
-		<div class="stack-s">
-			{#each data.nearby as item (item.id)}
-				<a class="card card-link" href="/fasilitas">
-					<span>
-						<strong>{item.name}</strong>
-						<span>{item.kind} · {item.distance}</span>
-					</span>
-				</a>
-			{/each}
-		</div>
-		<p class="note"><span class="dot"></span> Berdasarkan data yang tersedia.</p>
-	</aside>
-	</div>
 </main>

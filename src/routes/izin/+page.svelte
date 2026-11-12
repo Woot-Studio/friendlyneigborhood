@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ripple } from '#lib/ripple';
-	import AuthSplit from '#lib/components/AuthSplit.svelte';
 	import { Bell, ChevronLeft, MapPin, Smartphone } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 
@@ -69,7 +68,6 @@
 <svelte:head><title>Izin aplikasi · Friendly Neighborhood</title></svelte:head>
 <svelte:window onbeforeinstallprompt={capture} />
 
-<AuthSplit>
 <main class="pad sheet stack" style="padding-top: 12px;">
 	<a class="back" href="/kerentanan"><ChevronLeft size={20} /> Izin aplikasi</a>
 	<p class="lead">Agar kabar siaga sampai dan lokasi bisa dikirim saat Anda konfirmasi, Friendly Neighborhood meminta dua izin. Anda bisa mengubahnya nanti di profil.</p>
@@ -115,4 +113,3 @@
 		<button class="btn ghost" type="submit">Atur nanti</button>
 	</form>
 </main>
-</AuthSplit>

@@ -7,7 +7,7 @@
 
 <svelte:head><title>Hapus data · Friendly Neighborhood</title></svelte:head>
 
-<div class="sheet stack form-frame">
+<div class="sheet stack">
 	<a class="back" href="/profil"><ChevronLeft size={20} /> Hapus data saya</a>
 	<h1>Hapus data saya</h1>
 	<p class="lead">Data akun, kerentanan, langganan notifikasi, dan riwayat respons Anda akan dihapus dari kelurahan ini. Tindakan ini tidak bisa dibatalkan.</p>
