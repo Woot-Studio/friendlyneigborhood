@@ -2,7 +2,42 @@
 
 Jaringan siaga kelurahan. Warga menerima kabar peringatan, menekan **Saya aman** atau **Butuh bantuan**, dan ketua RT beserta relawan melihat siapa yang belum merespons. Antarmuka berbahasa Indonesia.
 
+| | |
+| --- | --- |
+| **Nama tim** | CaseyInfokanNamaTIm |
+| **Nama aplikasi** | Friendly Neighborhood |
+| **Kategori** | Web (PWA) |
+| **Subtema** | Public Service & Smart Governance |
+| **Institusi** | Program Studi Sistem Informasi, Universitas Tarumanagara |
+
+**Masalah yang diselesaikan.** Saat ada peringatan dini cuaca atau gempa dari BMKG, kabar resmi belum tentu sampai ke setiap rumah, dan ketua RT tidak punya cara cepat untuk tahu siapa yang sudah aman dan siapa yang belum memberi kabar, terutama lansia, penyandang disabilitas, dan keluarga dengan bayi. Koordinasi lewat grup chat membuat kabar tercecer dan rumah yang sama bisa dicek dua kali sementara rumah lain terlewat. Friendly Neighborhood menyatukan peringatan, konfirmasi keselamatan warga, dan pembagian tugas pengecekan dalam satu alur sampai ke tingkat kelurahan.
+
+**Target pengguna.** Warga yang terdaftar di sebuah kelurahan, ketua RT dan relawan yang mengoordinasikan pengecekan, serta pihak kelurahan yang memantau rekap lintas-RT.
+
 Mode demo berjalan langsung tanpa kunci API eksternal menggunakan database **Cloudflare D1 (SQLite)**: kelurahan contoh adalah **Kel. Tomang, Grogol Petamburan, Jakarta Barat**.
+
+## Fitur Utama
+
+Fitur yang sudah berjalan di aplikasi ini:
+
+| Fitur | Pengguna | Halaman |
+| --- | --- | --- |
+| Registrasi, masuk, dan pemilihan wilayah resmi (provinsi sampai kelurahan) | Warga, RT, relawan | `/daftar`, `/masuk`, `/wilayah` |
+| Penanda kerentanan (lansia, disabilitas, keluarga dengan bayi) dengan persetujuan eksplisit | Warga | `/kerentanan`, `/izin` |
+| Kejadian siaga dari pemantauan BMKG terjadwal (Cron 30 menit) | Sistem | `/api/cron/poll` |
+| Notifikasi Web Push ke warga di wilayah terdampak | Warga | `/api/push/subscribe` |
+| Respons satu ketukan **Saya aman** / **Butuh bantuan** dengan lokasi GPS dan jenis bantuan | Warga | `/siaga/[id]`, `/siaga/[id]/bantuan` |
+| Dasbor RT/relawan: peta dan daftar status warga, warga rentan yang belum merespons di urutan teratas | RT, relawan | `/rt` |
+| Klaim **Saya cek** atomik agar tidak ada kunjungan ganda, lalu **Tandai aman** | RT, relawan | `/rt/warga/[id]` |
+| Sinkronisasi langsung antar-tab lewat Server-Sent Events | RT, relawan, kelurahan | `/api/stream` |
+| Panel Kelurahan: rekap lintas-RT dan eskalasi otomatis warga rentan yang belum tertangani lewat batas waktu 15 menit, plus tombol simulasi eskalasi untuk demo | Kelurahan, RT | `/kelurahan` |
+| Mode simulasi/latihan siaga berlabel **SIMULASI** tanpa memanggil API luar | RT | `/rt/simulasi` |
+| Ringkasan situasi berbasis AI dari data agregat saja | RT | `/rt/ringkasan`, `/api/ai/ringkasan` |
+| Pengumuman RT dan daftar calon posko | RT | `/rt/pengumuman`, `/rt/posko` |
+| Fasilitas terdekat dan prakiraan cuaca kelurahan | Warga | `/fasilitas`, `/cuaca` |
+| Riwayat kejadian beserta rekap respons | Warga, RT | `/riwayat`, `/riwayat/[id]` |
+| Hapus data akun | Warga | `/profil/hapus` |
+| PWA yang dapat dipasang di ponsel | Semua | `manifest.webmanifest`, service worker |
 
 ## Menjalankan Lokal
 
@@ -11,6 +46,8 @@ bun install
 bun run d1:migrate:local
 bun run dev
 ```
+
+**Konfigurasi minimum untuk demo lokal:** cukup Bun dan tiga perintah di atas. Tidak ada kunci API atau secret yang wajib diisi; tanpa `.dev.vars`, aplikasi memakai kunci sesi bawaan untuk pengembangan, data contoh Kel. Tomang, ringkasan AI berbasis templat, dan mode simulasi tanpa API luar. Variabel di bagian [Variabel Lingkungan & Secret](#variabel-lingkungan--secret) hanya diperlukan untuk data live dan produksi.
 
 Aplikasi ada di [http://localhost:43721](http://localhost:43721). Saat pertama kali diakses, database D1 lokal otomatis terisi akun dan data contoh Kel. Tomang bila masih kosong.
 
@@ -138,12 +175,45 @@ bun run check
 bun run preview
 ```
 
+## Atribusi Pihak Ketiga
+
+Seluruh materi pihak ketiga yang dipakai, beserta sumber dan lisensinya. Desain antarmuka, ikon aplikasi (`static/icons`, dibuat dengan `scripts/icons.mjs`), dan data contoh Kel. Tomang (nama warga dan angka simulasi) dibuat sendiri oleh tim dan bersifat fiktif. Proyek ini tidak memakai template UI pihak ketiga.
+
+### Data dan layanan
+
+| Materi | Sumber | Dipakai untuk | Ketentuan |
+| --- | --- | --- | --- |
+| Info gempa terkini (`autogempa.json`) | [BMKG](https://data.bmkg.go.id/) | Kejadian siaga gempa | Data terbuka BMKG; wajib mencantumkan BMKG sebagai sumber |
+| Wilayah administratif, batas wilayah, cuaca, peringatan dini, fasilitas | [API Indonesia](https://apiindonesia.id/) (sumber data: Kepmendagri, BMKG, dan instansi terkait) | Pemilihan wilayah, prakiraan cuaca, peringatan dini, fasilitas terdekat | Layanan berbayar per permintaan; API Indonesia bukan API milik pemerintah |
+| Ubin peta | [OpenStreetMap](https://www.openstreetmap.org/copyright) | Peta di dasbor dan halaman fasilitas | © kontributor OpenStreetMap, ODbL; mengikuti [Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) |
+| Model bahasa | Google Gemini API, penyedia OpenAI-compatible, atau Cloudflare Workers AI | Ringkasan situasi dari data agregat | Sesuai ketentuan penyedia yang dipilih |
+| Web Push | Firebase Cloud Messaging (Google) | Notifikasi push | Ketentuan layanan Firebase |
+| Hosting dan database | Cloudflare Workers, Pages, D1, Cron Triggers | Backend, aset statis, database, tugas terjadwal | Ketentuan layanan Cloudflare |
+
+### Pustaka, font, dan ikon
+
+| Paket | Dipakai untuk | Lisensi |
+| --- | --- | --- |
+| [Svelte](https://svelte.dev/) dan [SvelteKit](https://kit.svelte.dev/) (`svelte`, `@sveltejs/kit`, `@sveltejs/adapter-cloudflare`, `@sveltejs/vite-plugin-svelte`) | Kerangka aplikasi | MIT |
+| [Vite](https://vite.dev/) | Build dan server pengembangan | MIT |
+| [TypeScript](https://www.typescriptlang.org/), `svelte-check` | Bahasa dan pemeriksaan tipe | Apache-2.0, MIT |
+| [Wrangler](https://developers.cloudflare.com/workers/wrangler/) | CLI deploy Cloudflare | MIT / Apache-2.0 |
+| [Leaflet](https://leafletjs.com/) | Peta interaktif | BSD-2-Clause |
+| [Lucide](https://lucide.dev/) (`@lucide/svelte`) | Ikon antarmuka | ISC |
+| [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) via [Fontsource](https://fontsource.org/fonts/plus-jakarta-sans) | Huruf antarmuka | SIL Open Font License 1.1 (paket Fontsource: MIT) |
+| [`web-push`](https://github.com/web-push-libs/web-push) | Terdaftar sebagai dependensi; pengiriman push di Worker memakai implementasi sendiri (`src/lib/server/push.ts`) | MPL-2.0 |
+| [`@supabase/supabase-js`](https://github.com/supabase/supabase-js), `@supabase/ssr` | Skrip seed (`scripts/seed.ts`, `scripts/seed-wilayah.ts`) | MIT |
+| [`puppeteer-core`](https://pptr.dev/) | Skrip tangkapan layar (pengembangan saja) | Apache-2.0 |
+| Bun | Runtime dan package manager | MIT |
+| Mermaid (dirender oleh GitHub) | Diagram arsitektur di README ini | MIT |
+
+Versi lengkap setiap dependensi tercantum di `package.json` dan `bun.lock`.
+
 ## Tim Developer
 
-Dikembangkan oleh tim mahasiswa "CaseyInfokanNamaTim":
+Tim **CaseyInfokanNamaTIm**, Program Studi Sistem Informasi, Universitas Tarumanagara:
 
 - Casey Heraldo Isaac Pinontoan
 - Matthew Eauggelion Pangemanan
 - Sandra Miranda Salindeho
 - Tesalonika Miracle Makalew
-
