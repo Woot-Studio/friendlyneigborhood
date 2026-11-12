@@ -140,7 +140,7 @@ bun run preview
 
 ## Tim Developer
 
-Dikembangkan oleh tim mahasiswa:
+Dikembangkan oleh tim mahasiswa "CaseyInfokanNamaTim":
 
 - Casey Heraldo Isaac Pinontoan
 - Matthew Eauggelion Pangemanan
