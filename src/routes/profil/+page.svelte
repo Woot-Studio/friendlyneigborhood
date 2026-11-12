@@ -14,7 +14,8 @@
 
 <svelte:head><title>Profil · Friendly Neighborhood</title></svelte:head>
 
-<div class="sheet stack">
+<div class="profile-grid">
+	<div class="stack profile-id">
 	<h1>Profil</h1>
 	<section class="card row">
 		<span class="avatar lg">{initials(user.fullName)}</span>
@@ -32,6 +33,8 @@
 			<dt>Nomor HP</dt><dd>{user.phone}</dd>
 		</dl>
 	</section>
+	</div>
+	<div class="stack profile-settings">
 	{#if form?.message && form.message !== 'Pengaturan disimpan.'}<p class="error">{form.message}</p>{/if}
 	{#if form?.message === 'Pengaturan disimpan.'}<p class="chip aman">{form.message}</p>{/if}
 	<form class="card stack" method="POST" action="?/simpan">
@@ -55,4 +58,5 @@
 		<button class="btn outline" type="submit"><LogOut size={18} /> Keluar</button>
 	</form>
 	<a class="btn ghost" href="/profil/hapus" style="color:#B8501C;"><Trash size={18} /> Hapus data saya</a>
+	</div>
 </div>

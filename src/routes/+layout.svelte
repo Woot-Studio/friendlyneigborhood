@@ -16,6 +16,7 @@
 	const path = $derived(page.url.pathname);
 	const onboarding = $derived(!data.user || data.user.setupStep !== 'done');
 	const focused = $derived(path.startsWith('/siaga') || path.startsWith('/contoh'));
+	const legacyShell = $derived(path === '/wilayah' || path === '/izin' || path === '/kerentanan');
 	let online = $state(true);
 
 	onMount(() => {
@@ -52,10 +53,12 @@
 			</section>
 		</div>
 	</div>
-{:else if onboarding || focused || !data.user}
+{:else if onboarding || !data.user}
 	{@render children()}
 {:else if data.user.role === 'warga'}
-	<ResidentShell>{@render children()}</ResidentShell>
+	<ResidentShell user={data.user} {focused} desktop={!legacyShell}>{@render children()}</ResidentShell>
+{:else if focused}
+	{@render children()}
 {:else}
 	<RtShell user={data.user}>{@render children()}</RtShell>
 {/if}

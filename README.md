@@ -137,3 +137,13 @@ bun test
 bun run check
 bun run preview
 ```
+
+## Tim Developer
+
+Dikembangkan oleh tim mahasiswa:
+
+- Casey Heraldo Isaac Pinontoan
+- Matthew Eauggelion Pangemanan
+- Sandra Miranda Salindeho
+- Tesalonika Miracle Makalew
+

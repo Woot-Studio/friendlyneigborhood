@@ -18,26 +18,29 @@
 
 <svelte:head><title>Beranda · Friendly Neighborhood</title></svelte:head>
 
-<div class="stack stagger">
-	<div>
-		<p class="kicker">Beranda warga</p>
-		<h1>Halo, {data.user?.fullName.split(' ')[0]}</h1>
-		<p class="lead">
-			{#if data.event}
-				Ada siaga aktif di kelurahan Anda.
-			{:else}
-				Tidak ada siaga aktif di kelurahan Anda saat ini.
-			{/if}
-		</p>
-	</div>
-	<div class="row" style="flex-wrap: wrap;">
-		{#if kel}<span class="chip rose">Kel. {kel.altName}</span>{/if}
-		{#if data.user?.rt}<span class="chip">RT {data.user.rt} / RW {data.user.rw}</span>{/if}
-		{#each labels as label (label)}<span class="chip rose">{label}</span>{/each}
+<div class="home-grid stagger">
+	<div class="home-intro">
+		<div>
+			<p class="kicker">Beranda warga</p>
+			<h1>Halo, {data.user?.fullName.split(' ')[0]}</h1>
+			<p class="lead">
+				{#if data.event}
+					Ada siaga aktif di kelurahan Anda.
+				{:else}
+					Tidak ada siaga aktif di kelurahan Anda saat ini.
+				{/if}
+			</p>
+		</div>
+		<div class="row" style="flex-wrap: wrap;">
+			{#if kel}<span class="chip rose">Kel. {kel.altName}</span>{/if}
+			{#if data.user?.rt}<span class="chip">RT {data.user.rt} / RW {data.user.rw}</span>{/if}
+			{#each labels as label (label)}<span class="chip rose">{label}</span>{/each}
+		</div>
 	</div>
 
+	<div class="home-status">
 	{#if data.event}
-		<a class="card" href="/siaga/{data.event.id}" style="border-color: {data.event.isSimulation ? '#E7D7B4' : '#E7C3B4'};">
+		<a class="card" href="/siaga/{data.event.id}" style="display: block; color: inherit; border-color: {data.event.isSimulation ? '#E7D7B4' : '#E7C3B4'};">
 			<div class="between">
 				<strong>{data.event.isSimulation ? 'Siaga aktif · simulasi' : 'Siaga aktif'}</strong>
 				{#if data.event.isSimulation}<span class="chip gold">SIMULASI</span>{/if}
@@ -66,15 +69,20 @@
 			</div>
 		</article>
 	{/if}
+	</div>
 
-	{#each data.news as item (item.id)}
-		<article class="card">
-			<p class="kicker">Pengumuman RT</p>
-			<p>{item.body}</p>
-		</article>
-	{/each}
+	{#if data.news.length}
+		<div class="home-news">
+			{#each data.news as item (item.id)}
+				<article class="card">
+					<p class="kicker">Pengumuman RT</p>
+					<p>{item.body}</p>
+				</article>
+			{/each}
+		</div>
+	{/if}
 
-	<a class="card stack-s" href="/cuaca">
+	<a class="card stack-s home-weather" href="/cuaca">
 		<p class="kicker">Prakiraan cuaca kelurahan</p>
 		<p class="row"><Cloud size={18} /> <strong>{data.days[0]?.weather}</strong> <span class="muted">{forecastBlurb(data.days)}</span></p>
 		<div class="forecast">
@@ -90,19 +98,21 @@
 		</div>
 	</a>
 
-	<a class="card card-link" href="/fasilitas">
+	<a class="card card-link home-facilities" href="/fasilitas">
 		<span class="mark"><MapPin size={18} /></span>
 		<span><strong>Fasilitas terdekat</strong><span>Puskesmas, polisi, pemadam, calon posko</span></span>
 		<ChevronRight size={18} />
 	</a>
-	{#if data.contoh && !data.event}
-		<a class="card card-link" href="/contoh/siaga">
-			<span class="mark"><Bell size={18} /></span>
-			<span><strong>Lihat contoh layar siaga</strong><span>Pratinjau saat notifikasi masuk</span></span>
-			<ChevronRight size={18} />
-		</a>
-	{/if}
 	{#if data.contoh}
-		<p class="note"><span class="dot"></span> Lokasi, pencatatan, dan prakiraan BMKG di layar ini adalah contoh, bukan data live.</p>
+		<div class="home-actions">
+			{#if !data.event}
+				<a class="card card-link" href="/contoh/siaga">
+					<span class="mark"><Bell size={18} /></span>
+					<span><strong>Lihat contoh layar siaga</strong><span>Pratinjau saat notifikasi masuk</span></span>
+					<ChevronRight size={18} />
+				</a>
+			{/if}
+			<p class="note"><span class="dot"></span> Lokasi, pencatatan, dan prakiraan BMKG di layar ini adalah contoh, bukan data live.</p>
+		</div>
 	{/if}
 </div>
