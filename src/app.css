@@ -90,6 +90,7 @@ img { max-width: 100%; }
 	justify-content: center;
 	gap: 8px;
 	min-height: 48px;
+	margin: 0;
 	padding: 0 16px;
 	border-radius: 12px;
 	border: 1px solid transparent;
@@ -270,13 +271,6 @@ img { max-width: 100%; }
 .meta dt { font-size: 13px; font-weight: 600; opacity: 0.85; }
 .meta dd { margin: 0; font-size: 14px; font-weight: 600; }
 
-.urgent {
-	background: var(--urgent);
-	color: white;
-	margin: -8px -20px 16px;
-	padding: 8px 20px 20px;
-}
-.urgent .kicker, .urgent .back { color: white; }
 .pill-lite {
 	display: inline-flex;
 	align-items: center;
@@ -670,8 +664,10 @@ img { max-width: 100%; }
 	.res-shell.desktop .siaga-aside .map-frame { height: 280px; }
 	.res-shell.desktop .action-row { flex-direction: row; align-items: stretch; }
 	.res-shell.desktop .action-row > .btn {
-		flex: 1;
+		flex: 1 1 0;
 		width: auto;
+		min-width: 0;
+		margin: 0;
 		white-space: nowrap;
 		padding-left: 12px;
 		padding-right: 12px;
