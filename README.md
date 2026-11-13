@@ -8,7 +8,9 @@ Jaringan siaga kelurahan. Warga menerima kabar peringatan, menekan **Saya aman**
 | **Nama aplikasi** | Friendly Neighborhood |
 | **Kategori** | Web (PWA) |
 | **Subtema** | Public Service & Smart Governance |
-| **Institusi** | Program Studi Sistem Informasi, Universitas Tarumanagara |
+| **Institusi** | Program Studi Sistem Informasi dan Teknik Informatika, Universitas Tarumanagara, Universitas President, Universitas Klabat
+
+|
 
 **Masalah yang diselesaikan.** Saat ada peringatan dini cuaca atau gempa dari BMKG, kabar resmi belum tentu sampai ke setiap rumah, dan ketua RT tidak punya cara cepat untuk tahu siapa yang sudah aman dan siapa yang belum memberi kabar, terutama lansia, penyandang disabilitas, dan keluarga dengan bayi. Koordinasi lewat grup chat membuat kabar tercecer dan rumah yang sama bisa dicek dua kali sementara rumah lain terlewat. Friendly Neighborhood menyatukan peringatan, konfirmasi keselamatan warga, dan pembagian tugas pengecekan dalam satu alur sampai ke tingkat kelurahan.
 
