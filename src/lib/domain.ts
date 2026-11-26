@@ -171,8 +171,13 @@ export function buildRows(
 	checkins: Checkin[],
 	names: Map<string, string>
 ): ResidentRow[] {
+	// Keep the first check-in per resident, matching the previous find() behavior.
+	const checkinsByUser = new Map<string, Checkin>();
+	for (const checkin of checkins) {
+		if (!checkinsByUser.has(checkin.userId)) checkinsByUser.set(checkin.userId, checkin);
+	}
 	return warga.map((user) => {
-		const checkin = checkins.find((item) => item.userId === user.id);
+		const checkin = checkinsByUser.get(user.id);
 		const status = checkin?.status ?? 'belum';
 		const claimer = checkin?.claimedBy ? names.get(checkin.claimedBy) : null;
 		return {

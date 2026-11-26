@@ -95,6 +95,37 @@ describe('format dan urutan dasbor', () => {
 	});
 });
 
+describe('pencocokan check-in warga', () => {
+	test('check-in pertama tetap dipakai dan warga tanpa check-in tetap belum merespons', () => {
+		const first = {
+			id: 'c-first',
+			eventId: 'e1',
+			userId: 'hartono',
+			status: 'aman' as const,
+			priorStatus: null,
+			helpType: null,
+			note: '',
+			lat: 0,
+			lng: 0,
+			locationLabel: '',
+			claimedBy: null,
+			claimedAt: null,
+			updatedAt: '2026-11-11T15:14:00.000Z'
+		};
+		const rows = buildRows(people, [
+			first,
+			{ ...first, id: 'c-second', status: 'butuh' as const },
+			{ ...first, id: 'c-unknown', userId: 'unknown' }
+		], new Map());
+		expect(rows).toHaveLength(people.length);
+		expect(rows[0].status).toBe('aman');
+		expect(rows[0].lat).toBe(0);
+		expect(rows[0].lng).toBe(0);
+		expect(rows[1].status).toBe('belum');
+		expect(rows[1].lat).toBe(people[1].lat);
+	});
+});
+
 describe('ringkasan AI hanya angka agregat', () => {
 	test('payload tidak memuat nama, alamat, lokasi, atau kerentanan individu', () => {
 		const rows: ResidentRow[] = sortRows(buildRows(people, [], new Map()));
