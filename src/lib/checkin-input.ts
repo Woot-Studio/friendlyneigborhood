@@ -20,7 +20,9 @@ export function parseCheckinForm(form: FormData): Result<CheckinInput> {
 	const fields = ['status', 'eventId', 'helpType', 'note', 'lat', 'lng', 'locationLabel'] as const;
 	const values = new Map<string, string>();
 	for (const field of fields) {
-		const value = form.get(field);
+		const entries = form.getAll(field);
+		if (entries.length > 1) return { ok: false, error: 'Format formulir tidak valid.' };
+		const value = entries[0] ?? null;
 		if (value !== null && typeof value !== 'string') {
 			return { ok: false, error: 'Format formulir tidak valid.' };
 		}
@@ -36,6 +38,10 @@ export function parseCheckinForm(form: FormData): Result<CheckinInput> {
 
 	const latRaw = (values.get('lat') ?? '').trim();
 	const lngRaw = (values.get('lng') ?? '').trim();
+	const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
+	if ((latRaw && !decimal.test(latRaw)) || (lngRaw && !decimal.test(lngRaw))) {
+		return { ok: false, error: 'Koordinat lokasi tidak valid.' };
+	}
 	const lat = latRaw ? Number(latRaw) : null;
 	const lng = lngRaw ? Number(lngRaw) : null;
 	if ((lat !== null && (!Number.isFinite(lat) || Math.abs(lat) > 90)) ||
